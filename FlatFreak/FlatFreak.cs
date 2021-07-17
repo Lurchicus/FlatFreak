@@ -143,10 +143,7 @@ namespace FlatFreak
         /// </summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
-        private void prdDocument_BeginPrint(object sender, System.Drawing.Printing.PrintEventArgs e)
-        {
-            CheckPrint = 0;
-        }
+        private void prdDocument_BeginPrint(object sender, System.Drawing.Printing.PrintEventArgs e) => CheckPrint = 0;
 
         /// <summary>
         /// Indicates printing the current page has started
