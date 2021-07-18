@@ -71,7 +71,6 @@ namespace FlatFreak
             if (dlgOpen.FileName.Length > 0)
             {
                 txtFilename.AppendText(dlgOpen.FileName);
-                CliFilename = dlgOpen.FileName;
             }
             btnFile.Enabled = false;
             tsbRun.Enabled = true;
@@ -590,6 +589,10 @@ namespace FlatFreak
         /// </summary>
         private void HeadFreak()
         {
+            if (CliFilename.Length == 0) { CliFilename = txtFilename.Text; }
+            if (CliColumn.Length == 0) { CliColumn = Column.Value.ToString(); }
+            if (CliLength.Length == 0) { CliLength = Length.Value.ToString(); }
+            if (CliName.Length == 0) { CliName = txtFieldname.Text; }
             string Line;
             Line = "FlatFreak version: " +
                 Application.ProductVersion +
@@ -600,7 +603,7 @@ namespace FlatFreak
                 " columns, " + CliLength + " length." + nl +
                 "Label: " + CliName + nl +
                 "Output: " + (CliOut ?? "n/a") + nl +
-                "Mode: CLI" + nl + nl;
+                "Mode: " + ((CliMode)?"CLI":"GUI") + nl + nl;
             if (!CliMode)
             {
                 TxtApp(Line);
