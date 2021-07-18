@@ -105,7 +105,6 @@ namespace FlatFreak
                     }
                 }
             }
-            temp = null;
         }
 
         /// <summary>

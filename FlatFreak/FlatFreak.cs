@@ -87,7 +87,7 @@ namespace FlatFreak
         private void tsbRun_Click(object sender, EventArgs e)
         {
             SInfo("Running...");
-            Reader(txtFilename.Text, Column.Value.ToString(), Length.Value.ToString(), CliMode);
+            Reader(txtFilename.Text, Column.Value.ToString(), Length.Value.ToString(), false);
             SInfo("Idle...");
         }
 
@@ -321,7 +321,7 @@ namespace FlatFreak
                     Freaks.GetCellCount(i).ToString() + nl);
             }
 
-            TxtApp(nl + "Test complete. Expect:" + nl +
+            TxtApp(nl + "Test setup complete. Expect:" + nl +
                 "2 Jovians" + nl +
                 "1 Manticoran" + nl +
                 "3 Progenitors" + nl +
@@ -460,7 +460,6 @@ namespace FlatFreak
             double CumulativePercent;
             int Index;
             string Item;
-            int LineLen;
             StringBuilder oLine;
             string Message;
             string Caption = "FlatFreak.FreakOut()";
@@ -487,7 +486,6 @@ namespace FlatFreak
             oLine.Append("Cum. Count");
             oLine.Append(" ");
             oLine.Append(new String(' ', 10 - "Cum. %".Length) + "Cum. %");
-            LineLen = oLine.Length - 3;
             if (!CliMode)
             {
                 RText1.AppendText(nl + oLine.ToString() + nl);
