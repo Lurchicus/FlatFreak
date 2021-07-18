@@ -16,7 +16,7 @@ namespace FlatFreak
         /// This is a counter that records the number of flat file records
         /// that have been read by the stream reader to be processed
         /// </summary>
-        public Int32 RecordCount = 0;
+        public int RecordCount = 0;
 
         private string CliFilename = string.Empty;
         private string CliColumn = string.Empty;
@@ -87,7 +87,7 @@ namespace FlatFreak
         private void tsbRun_Click(object sender, EventArgs e)
         {
             SInfo("Running...");
-            Reader(txtFilename.Text, Column.Value.ToString(), Length.Value.ToString(), false);
+            Reader(txtFilename.Text, Column.Value.ToString(), Length.Value.ToString());
             SInfo("Idle...");
         }
 
@@ -171,109 +171,7 @@ namespace FlatFreak
         /// <param name="e"></param>
         private void FlatFreak_Load(object sender, EventArgs e)
         {
-            //CLI test parameters:
-            // -fC:\\Users\danrh\Documents\FlatTestFile.txt -c5 -l3 -nState3 -oC:\Users\danrh\Documents\FlatTestFileRpt.txt -h
-            int iLen;
-            string Arg;
-            string Argument;
-            string[] Cmd = Environment.GetCommandLineArgs();
-            if (Cmd[0].Length > 0 & Cmd.Length > 1)
-            {
-                for (int i = 1; i < Cmd.Length; i++)
-                {
-                    //If we have a command line, parse it
-                    Argument = Cmd[i];
-
-                    // -fFullPath - "-f\\Server\Path\File.ext "
-                    if (Argument.ToLower().StartsWith("-f"))
-                    {
-                        Arg = Argument.Trim();
-                        iLen = Arg.Length;
-                        if (iLen >= 3)
-                        {
-                            CliFilename = Arg.Substring(2, iLen - 2);
-                        }
-                    }
-
-                    // -cColumn - "-c32 "
-                    if (Argument.ToLower().StartsWith("-c"))
-                    {
-                        Arg = Argument.Trim();
-                        iLen = Arg.Length;
-                        if (iLen >= 3)
-                        {
-                            CliColumn = Arg.Substring(2, iLen - 2);
-                        }
-                    }
-
-                    // -lLength - "-l12 "
-                    if (Argument.ToLower().StartsWith("-l"))
-                    {
-                        Arg = Argument.Trim();
-                        iLen = Arg.Length;
-                        if (iLen >= 3)
-                        {
-                            CliLength = Arg.Substring(2, iLen - 2);
-                        }
-                    }
-
-                    // -nName - "-nTelephoneNumber "
-                    if (Argument.ToLower().StartsWith("-n"))
-                    {
-                        Arg = Argument.Trim();
-                        iLen = Arg.Length;
-                        if (iLen >= 3)
-                        {
-                            CliName = Arg.Substring(2, iLen - 2);
-                        }
-                    }
-
-                    // -oOutPath - "-o\\Server\Path\File.ext "
-                    if (Argument.ToLower().StartsWith("-o"))
-                    {
-                        Arg = Argument.Trim();
-                        iLen = Arg.Length;
-                        if (iLen >= 3)
-                        {
-                            CliOut = Arg.Substring(2, iLen - 2);
-                        }
-                    }
-
-                    // -h - "-h "
-                    if (Argument.ToLower().StartsWith("-h"))
-                    {
-                        CliHelp = "FlatFreak CLI mode commands:" + nl +
-                            "-fFullPath - '-f\\\\Server\\Path\\File.ext '" + nl +
-                            "-cColumn   - '-c32 '" + nl +
-                            "-lLength   - '-l12 '" + nl +
-                            "-nName     - '-nFieldName '" + nl +
-                            "-oOutPath  - '-o\\\\Server\\Path\\File.ext '" + nl +
-                            "-h         - (this help screen)";
-                    }
-                }
-                if (CliFilename.Length > 0 & CliColumn.Length > 0 &
-                    CliLength.Length > 0 & CliName.Length > 0 &
-                    CliOut.Length > 0)
-                {
-                    CliMode = true;
-                }
-                else
-                {
-                    CliMode = false;
-                }
-            }
-            else
-            {
-                CliMode = false;
-            }
-            if (CliMode)
-            {
-                Reader(CliFilename, CliColumn, CliLength, CliMode);
-            }
-            else
-            {
                 DoE();
-            }
         }
 
         /// <summary>
@@ -350,8 +248,7 @@ namespace FlatFreak
         /// <param name="Filename">Flat file path and filename to be processed</param>
         /// <param name="Column">The column the field to process starts in (1 based)</param>
         /// <param name="Length">The length of the field to process</param>
-        /// <param name="CLIMode">Boolean CLI mode flag</param>
-        public void Reader(string Filename, string Column, string Length, bool CLIMode)
+        public void Reader(string Filename, string Column, string Length)
         {
             string Message;
             string Caption = "FlatFreak.Reader()";
@@ -362,11 +259,9 @@ namespace FlatFreak
             int Wid = 0;
             int AltWid;
 
-            if (!CliMode)
-            {
-                SInfo("Processing input file...");
-                RText1.Clear();
-            }
+            SInfo("Processing input file...");
+            RText1.Clear();
+
             Freaks = new FreakList { };
 
             if (Column.Length > 0) { Col = Convert.ToInt32(Column) - 1; }
@@ -414,28 +309,15 @@ namespace FlatFreak
                 }
                 finally
                 {
-                    if (!CliMode)
-                    {
-                        SInfo("Sorting frequency list...");
-                    }
+                    SInfo("Sorting frequency list...");
                     Freaks.Sort();
-                    if (!CliMode)
-                    {
-                        SInfo("Creating frequency report...");
-                    }
+                    SInfo("Creating frequency report...");
                     FreakOut();
-                    if (CliMode)
-                    {
-                        Application.Exit();
-                    }
-                    else
-                    {
-                        tsbPrintSetup.Enabled = true;
-                        tsbPrintPreview.Enabled = true;
-                        tsbPrint.Enabled = true;
-                        tsbRun.Enabled = false;
-                        Button1.Enabled = false;
-                    }
+                    tsbPrintSetup.Enabled = true;
+                    tsbPrintPreview.Enabled = true;
+                    tsbPrint.Enabled = true;
+                    tsbRun.Enabled = false;
+                    Button1.Enabled = false;
                 }
             }
             else
@@ -461,13 +343,8 @@ namespace FlatFreak
             int Index;
             string Item;
             StringBuilder oLine;
-            string Message;
-            string Caption = "FlatFreak.FreakOut()";
 
-            if (!CliMode)
-            {
-                SInfo("Frequency report generation...");
-            }
+            SInfo("Frequency report generation...");
             MaxItemLen = Freaks.GetMaxItemLength();
             if (MaxItemLen < "Value".Length)
             {
@@ -486,14 +363,7 @@ namespace FlatFreak
             oLine.Append("Cum. Count");
             oLine.Append(" ");
             oLine.Append(new String(' ', 10 - "Cum. %".Length) + "Cum. %");
-            if (!CliMode)
-            {
-                RText1.AppendText(nl + oLine.ToString() + nl);
-            }
-            else
-            {
-                CliText += nl + oLine.ToString() + nl;
-            }
+            RText1.AppendText(nl + oLine.ToString() + nl);
 
             //Create the body of the report
             TotalCount = Freaks.AddedItem;
@@ -516,46 +386,7 @@ namespace FlatFreak
                 oLine.Append(" ");
                 oLine.AppendFormat("{0,9:F2}", CumulativePercent);
                 oLine.Append("%" + nl);
-                if (!CliMode)
-                {
-                    TxtApp(oLine.ToString());
-                }
-                else
-                {
-                    CliText += oLine.ToString();
-                }
-            }
-            if (!CliMode)
-            {
-                SInfo("Frequency report done...");
-            }
-            else
-            {
-                FileInfo OldFile = new FileInfo(CliOut);
-                OldFile.Delete();
-
-                TextWriter Out = new StreamWriter(CliOut, true);
-                try
-                {
-                    Out.Write(CliText + nl + CliHelp);
-                    Out.Flush();
-                    Out.Close();
-                }
-                catch (Exception Ex)
-                {
-                    Message = "Error in StreamWrite writing report to file" + nl +
-                        Ex.Message + nl + Ex.StackTrace;
-                    MessageBox.Show(Message, Caption, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-                finally
-                {
-                    if (Out != null)
-                    {
-                        Out.Dispose();
-                    }
-                    CliText = string.Empty;
-                    CliHelp = string.Empty;
-                }
+                TxtApp(oLine.ToString());
             }
         }
 
@@ -564,10 +395,10 @@ namespace FlatFreak
         /// </summary>
         private void HeadFreak()
         {
-            if (CliFilename.Length == 0) { CliFilename = ((CliMode) ? "" : txtFilename.Text); }
-            if (CliColumn.Length == 0) { CliColumn = ((CliMode) ? "" : Column.Value.ToString()); }
-            if (CliLength.Length == 0) { CliLength = ((CliMode) ? "" : Length.Value.ToString()); }
-            if (CliName.Length == 0) { CliName = ((CliMode) ? "" : txtFieldname.Text); }
+            CliFilename = txtFilename.Text; 
+            CliColumn = Column.Value.ToString(); 
+            CliLength = Length.Value.ToString(); 
+            CliName = txtFieldname.Text; 
             string Line;
             Line = "FlatFreak version: " +
                 Application.ProductVersion +
@@ -579,15 +410,8 @@ namespace FlatFreak
                 "Label: " + CliName + nl +
                 "Output: " + ((CliOut.Length == 0) ? "n/a" : CliOut) + nl +
                 "Mode: " + ((CliMode) ? "CLI" : "GUI") + nl + nl;
-            if (!CliMode)
-            {
                 TxtApp(Line);
                 SInfo("Header generated...");
-            }
-            else
-            {
-                CliText += Line;
-            }
         }
 
         /// <summary>
@@ -617,5 +441,14 @@ namespace FlatFreak
         {
             Application.DoEvents();
         }
+
+        public string CliFilename1 { get => CliFilename; set => CliFilename = value; }
+        public string CliColumn1 { get => CliColumn; set => CliColumn = value; }
+        public string CliLength1 { get => CliLength; set => CliColumn = value; }
+        public string CliName1 { get => CliName; set => CliName = value; }
+        public bool CliMode1 { get => CliMode; set => CliMode = value; }
+        public string CliText1 { get => CliText; set => CliText = value; }
+        public string CliOut1 { get => CliOut; set => CliOut = value; }
+        public string CliHelp1 { get => CliHelp; set => CliHelp = value; }
     }
 }
