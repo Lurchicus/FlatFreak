@@ -71,6 +71,7 @@ namespace FlatFreak
             if (dlgOpen.FileName.Length > 0)
             {
                 txtFilename.AppendText(dlgOpen.FileName);
+                CliFilename = dlgOpen.FileName;
             }
             btnFile.Enabled = false;
             tsbRun.Enabled = true;

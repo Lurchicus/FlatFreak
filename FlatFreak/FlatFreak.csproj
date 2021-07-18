@@ -29,7 +29,7 @@
     <PublisherName>Dan Rhea</PublisherName>
     <SuiteName>danrh</SuiteName>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.6.0</ApplicationVersion>
+    <ApplicationVersion>1.0.8.0</ApplicationVersion>
     <UseApplicationTrust>true</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -138,6 +138,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="FlatFreak.ico" />
+    <Content Include="FlatTestFile.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
