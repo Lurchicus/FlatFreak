@@ -8,6 +8,7 @@ namespace FlatFreak
     /// <summary>
     /// This program is used to create a "frequency" report on a flat file
     /// column. This effectively aggregates the column as a percentage.
+    /// The program is unique(ish) as it works in CLI and GUI modes.
     /// </summary>
     public partial class FlatFreak : Form
     {
@@ -172,18 +173,16 @@ namespace FlatFreak
         {
             //CLI test parameters:
             // -fC:\\Users\danrh\Documents\FlatTestFile.txt -c5 -l3 -nState3 -oC:\Users\danrh\Documents\FlatTestFileRpt.txt -h
-            Int32 iLen = 0;
-            string Arg = string.Empty;
-            string Argument = string.Empty;
+            int iLen;
+            string Arg;
+            string Argument;
             string[] Cmd = Environment.GetCommandLineArgs();
             if (Cmd[0].Length > 0 & Cmd.Length > 1)
             {
-                for (Int32 i = 1; i < Cmd.Length; i++)
+                for (int i = 1; i < Cmd.Length; i++)
                 {
                     //If we have a command line, parse it
-                    Arg = string.Empty;
                     Argument = Cmd[i];
-                    iLen = 0;
 
                     // -fFullPath - "-f\\Server\Path\File.ext "
                     if (Argument.ToLower().StartsWith("-f"))
@@ -305,7 +304,7 @@ namespace FlatFreak
             TxtApp("Items added is " + Freaks.AddedItem.ToString() + nl);
             TxtApp("Items stored is " + Freaks.Items.ToString() + nl + nl);
 
-            for (Int32 i = 0; i < Freaks.Items; i++)
+            for (int i = 0; i < Freaks.Items; i++)
             {
                 TxtApp("Item " + i.ToString() + " is " +
                     Freaks.GetCellItem(i) + " count is " +
@@ -315,7 +314,7 @@ namespace FlatFreak
             TxtApp(nl + "*sorting*" + nl + nl);
             Freaks.Sort();
 
-            for (Int32 i = 0; i < Freaks.Items; i++)
+            for (int i = 0; i < Freaks.Items; i++)
             {
                 TxtApp("Item " + i.ToString() + " is " +
                     Freaks.GetCellItem(i) + " count is " +
@@ -354,14 +353,14 @@ namespace FlatFreak
         /// <param name="CLIMode">Boolean CLI mode flag</param>
         public void Reader(string Filename, string Column, string Length, bool CLIMode)
         {
-            string Message = string.Empty;
+            string Message;
             string Caption = "FlatFreak.Reader()";
             TextReader Inp;
-            string Line = string.Empty;
-            string Chunk = string.Empty;
-            Int32 Col = 0;
-            Int32 Wid = 0;
-            Int32 AltWid = 0;
+            string Line;
+            string Chunk;
+            int Col = 0;
+            int Wid = 0;
+            int AltWid;
 
             if (!CliMode)
             {
@@ -415,7 +414,6 @@ namespace FlatFreak
                 }
                 finally
                 {
-                    Inp = null;
                     if (!CliMode)
                     {
                         SInfo("Sorting frequency list...");
@@ -454,17 +452,17 @@ namespace FlatFreak
         /// </summary>
         private void FreakOut()
         {
-            Int32 MaxItemLen = 0;
-            Int32 TotalCount = 0;
-            Int32 Count = 0;
-            Int32 CumulativeCount = 0;
-            double Percent = 0.0;
-            double CumulativePercent = 0.0;
-            Int32 Index = 0;
-            string Item = string.Empty;
-            Int32 LineLen = 0;
+            int MaxItemLen;
+            int TotalCount;
+            int Count;
+            int CumulativeCount = 0;
+            double Percent;
+            double CumulativePercent;
+            int Index;
+            string Item;
+            int LineLen;
             StringBuilder oLine;
-            string Message = string.Empty;
+            string Message;
             string Caption = "FlatFreak.FreakOut()";
 
             if (!CliMode)
@@ -478,71 +476,55 @@ namespace FlatFreak
             }
 
             //Build the Header
-            try
+            HeadFreak();
+            oLine = new StringBuilder();
+            oLine.Append("Value" + new String(' ', MaxItemLen - "Value".Length));
+            oLine.Append(" ");
+            oLine.Append(new String(' ', 10 - "Count".Length) + "Count");
+            oLine.Append(" ");
+            oLine.Append(new String(' ', 10 - "Percent".Length) + " Percent");
+            oLine.Append(" ");
+            oLine.Append("Cum. Count");
+            oLine.Append(" ");
+            oLine.Append(new String(' ', 10 - "Cum. %".Length) + "Cum. %");
+            LineLen = oLine.Length - 3;
+            if (!CliMode)
             {
-                HeadFreak();
-                oLine = new StringBuilder();
-                oLine.Append("Value" + new String(' ', MaxItemLen - "Value".Length));
-                oLine.Append(" ");
-                oLine.Append(new String(' ', 10 - "Count".Length) + "Count");
-                oLine.Append(" ");
-                oLine.Append(new String(' ', 10 - "Percent".Length) + " Percent");
-                oLine.Append(" ");
-                oLine.Append("Cum. Count");
-                oLine.Append(" ");
-                oLine.Append(new String(' ', 10 - "Cum. %".Length) + "Cum. %");
-                LineLen = oLine.Length - 3;
-                if (!CliMode)
-                {
-                    RText1.AppendText(nl + oLine.ToString() + nl);
-                }
-                else
-                {
-                    CliText += nl + oLine.ToString() + nl;
-                }
+                RText1.AppendText(nl + oLine.ToString() + nl);
             }
-            catch { }
-            finally
+            else
             {
-                oLine = null;
+                CliText += nl + oLine.ToString() + nl;
             }
 
             //Create the body of the report
             TotalCount = Freaks.AddedItem;
             for (Index = 0; Index < Freaks.Items; Index++)
             {
-                try
-                {
-                    Count = Freaks.GetCellCount(Index);
-                    CumulativeCount += Count;
-                    Item = Freaks.GetCellItem(Index);
-                    Percent = (Convert.ToDouble(Count) / Convert.ToDouble(TotalCount)) * 100.0;
-                    CumulativePercent = (Convert.ToDouble(CumulativeCount) / Convert.ToDouble(TotalCount)) * 100.0;
+                Count = Freaks.GetCellCount(Index);
+                CumulativeCount += Count;
+                Item = Freaks.GetCellItem(Index);
+                Percent = (Convert.ToDouble(Count) / Convert.ToDouble(TotalCount)) * 100.0;
+                CumulativePercent = (Convert.ToDouble(CumulativeCount) / Convert.ToDouble(TotalCount)) * 100.0;
 
-                    oLine = new StringBuilder();
-                    oLine.Append(Item.PadRight(MaxItemLen));
-                    oLine.Append(" ");
-                    oLine.Append(Count.ToString().PadLeft(10));
-                    oLine.Append(" ");
-                    oLine.AppendFormat("{0,10:F2}", Percent);
-                    oLine.Append("% ");
-                    oLine.Append(CumulativeCount.ToString().PadLeft(10));
-                    oLine.Append(" ");
-                    oLine.AppendFormat("{0,9:F2}", CumulativePercent);
-                    oLine.Append("%" + nl);
-                    if (!CliMode)
-                    {
-                        TxtApp(oLine.ToString());
-                    }
-                    else
-                    {
-                        CliText += oLine.ToString();
-                    }
-                }
-                catch { }
-                finally
+                oLine = new StringBuilder();
+                oLine.Append(Item.PadRight(MaxItemLen));
+                oLine.Append(" ");
+                oLine.Append(Count.ToString().PadLeft(10));
+                oLine.Append(" ");
+                oLine.AppendFormat("{0,10:F2}", Percent);
+                oLine.Append("% ");
+                oLine.Append(CumulativeCount.ToString().PadLeft(10));
+                oLine.Append(" ");
+                oLine.AppendFormat("{0,9:F2}", CumulativePercent);
+                oLine.Append("%" + nl);
+                if (!CliMode)
                 {
-                    oLine = null;
+                    TxtApp(oLine.ToString());
+                }
+                else
+                {
+                    CliText += oLine.ToString();
                 }
             }
             if (!CliMode)
@@ -551,13 +533,8 @@ namespace FlatFreak
             }
             else
             {
-                try
-                {
-                    FileInfo OldFile = new FileInfo(CliOut);
-                    OldFile.Delete();
-                    OldFile = null;
-                }
-                catch { }
+                FileInfo OldFile = new FileInfo(CliOut);
+                OldFile.Delete();
 
                 TextWriter Out = new StreamWriter(CliOut, true);
                 try
@@ -589,10 +566,10 @@ namespace FlatFreak
         /// </summary>
         private void HeadFreak()
         {
-            if (CliFilename.Length == 0) { CliFilename = txtFilename.Text; }
-            if (CliColumn.Length == 0) { CliColumn = Column.Value.ToString(); }
-            if (CliLength.Length == 0) { CliLength = Length.Value.ToString(); }
-            if (CliName.Length == 0) { CliName = txtFieldname.Text; }
+            if (CliFilename.Length == 0) { CliFilename = ((CliMode) ? "" : txtFilename.Text); }
+            if (CliColumn.Length == 0) { CliColumn = ((CliMode) ? "" : Column.Value.ToString()); }
+            if (CliLength.Length == 0) { CliLength = ((CliMode) ? "" : Length.Value.ToString()); }
+            if (CliName.Length == 0) { CliName = ((CliMode) ? "" : txtFieldname.Text); }
             string Line;
             Line = "FlatFreak version: " +
                 Application.ProductVersion +
@@ -602,8 +579,8 @@ namespace FlatFreak
                 "Frequency: " + CliColumn +
                 " columns, " + CliLength + " length." + nl +
                 "Label: " + CliName + nl +
-                "Output: " + (CliOut ?? "n/a") + nl +
-                "Mode: " + ((CliMode)?"CLI":"GUI") + nl + nl;
+                "Output: " + ((CliOut.Length == 0) ? "n/a" : CliOut) + nl +
+                "Mode: " + ((CliMode) ? "CLI" : "GUI") + nl + nl;
             if (!CliMode)
             {
                 TxtApp(Line);

@@ -47,7 +47,6 @@ namespace FlatFreak
         /// <param name="Item"></param>
         public void Add(string Item)
         {
-            Int32 Index = 0;
             bool Added = false;
             if (Items == 0)
             {
@@ -57,7 +56,7 @@ namespace FlatFreak
             {
                 //Scan through the list of FreakCells to see if the string in
                 // Item has been added yet, if it has, increment the count.
-                for (Index = 0; Index < CellList.Count; Index++)
+                for (int Index = 0; Index < CellList.Count; Index++)
                 {
                     if (CellList[Index].GetValue == Item)
                     {
@@ -79,24 +78,22 @@ namespace FlatFreak
                 CellList.Add(Cell);
                 Items++;
                 AddedItem++;
-                Cell = null;
             }
         }
 
         /// <summary>
-        /// Sort the FreakList by value (string) with a simple bubble sort
+        /// Sort the FreakList by value (string) with a simple bubble sort (they're easy to write okay?)
         /// </summary>
         public void Sort()
         {
             bool Sorted = false;
-            Int32 Index = 0;
             FreakCell temp;
             if (Items >= 2)
             {
                 while (!Sorted)
                 {
                     Sorted = true;
-                    for (Index = 0; Index < CellList.Count - 1; Index++)
+                    for (int Index = 0; Index < CellList.Count - 1; Index++)
                     {
                         if (string.Compare(CellList[Index].GetValue, CellList[Index + 1].GetValue) > 0)
                         {
