@@ -157,7 +157,7 @@
             this.Button1.Name = "Button1";
             this.Button1.Size = new System.Drawing.Size(23, 22);
             this.Button1.Text = "toolStripButton1";
-            this.Button1.ToolTipText = "Test classes";
+            this.Button1.ToolTipText = "Internal classes test";
             this.Button1.Click += new System.EventHandler(this.Button1_Click);
             // 
             // RText1

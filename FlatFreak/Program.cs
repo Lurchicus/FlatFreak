@@ -14,33 +14,40 @@ namespace FlatFreak
         static private string CliColumn = string.Empty;
         static private string CliLength = string.Empty;
         static private string CliName = string.Empty;
-        static private bool CliMode = false;
         static private string CliText = string.Empty;
         static private string CliOut = string.Empty;
         static private string CliHelp = string.Empty;
+        static private bool CliMode = false;
 
         static internal FreakList Freaks { get; set; } = new FreakList { };
 
         static public int CheckPrint { get; set; }
 
         /// <summary>
-        /// The main entry point for the application.
+        /// The main entry point for the application. It is also used to manage the CLI functioality.
         /// </summary>
+        /// <param name="Cmd">Command line string array (if present)</param>
         [STAThread]
         static void Main(string[] Cmd)
         {
-            //CLI test parameters:
-            // -fC:\Users\danrh\Documents\FlatTestFile.txt -c5 -l3 -nState3 -oC:\Users\danrh\Documents\FlatTestFileRpt.txt -h
+            // CLI test parameters:
+            // FlatFreak.exe -fC:\Users\danrh\Documents\FlatTestFile.txt -c5 -l2 -nState -oC:\Users\danrh\Documents\FlatTestFileRpt.txt -h
             // or
-            //  -fC:\Users\danrh\Documents\FlatTestFile.txt -c5 -l3 -nState3 -h
+            // FlatFreak.exe -fC:\Users\danrh\Documents\FlatTestFile.txt -c5 -l3 -nState -h
             if (Cmd.Length == 0)
             {
+                // This is for GUI mode operation... we will still have a console visible (until I figure out how
+                // to hide it without breaking GUI
+                // Please ignoe the big honking black window...
+                Wl("This window will close automatically when we exit the GUI interface.");
                 System.Windows.Forms.Application.EnableVisualStyles();
                 System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);
+                // Off to the GUI interface we go...
                 System.Windows.Forms.Application.Run(new FlatFreak());
             }
             else
             {
+                // Parse the CLI command line
                 int iLen;
                 string Arg;
                 string Argument;
@@ -52,8 +59,10 @@ namespace FlatFreak
                         //If we have a command line, parse it
                         Argument = Cmd[i];
 
-                        // FlatFreak.exe
-                        if (Argument.ToLower().StartsWith("flatfreak"))
+                        // Absorb FlatFreak.exe or ./flatfreak.exe if present
+                        if (Argument.ToLower().StartsWith("flatfreak") ||
+                            Argument.ToLower().StartsWith("./") ||
+                            Argument.ToLower().StartsWith(".\\"))
                         {
                             // Just here to suck up the argument if present
                         }
@@ -126,11 +135,39 @@ namespace FlatFreak
                         }
                     }
                 }
-                Reader(CliFilename, CliColumn, CliLength);
+
+                // Warn the user about any missing parameters
+                if (CliFilename.Length == 0) { Wl("- Input filename not supplied!"); }
+                if (CliColumn.Length == 0) { Wl("- Start column not supplied!"); }
+                if (CliLength.Length == 0) { Wl("- Column width not supplied!"); }
+                if (CliName.Length == 0) { Wl("- Field name not supplied!"); }
+                if (CliOut.Length == 0) { Wl("- Output file not supplied (optional)!"); }
+                // Make sure we have our required parameters before bothering to call Reader
+                if (CliFilename.Length > 0 && CliColumn.Length > 0 && CliLength.Length > 0 && CliName.Length > 0)
+                {
+                    Reader(CliFilename, CliColumn, CliLength);
+                }
+                else
+                {
+                    // Force load help if we were unable to call Reader()
+                    CliHelp = nl + "FlatFreak CLI mode commands:" + nl +
+                        "-fFullPath - '-f\\\\Server\\Path\\File.ext '" + nl +
+                        "-cColumn   - '-c32 '" + nl +
+                        "-lLength   - '-l12 '" + nl +
+                        "-nName     - '-nFieldName '" + nl +
+                        "-oOutPath  - '-o\\\\Server\\Path\\File.ext '" + nl +
+                        "-h         - (this help screen)";
+                    Wl(CliHelp);
+                }
             }
-            //System.Windows.Forms.Application.Exit();
-            Console.Write("Press a key to exit...");
-            System.ConsoleKeyInfo HoldHere = Console.ReadKey();
+            if (Cmd.Length > 0)
+            {
+                // Only prompt for a keypress if we are truely in CLI mode, otherwise
+                // the console output screen will close normally when the GUI interface
+                // closes.
+                Console.Write("Press a key to exit...");
+                System.ConsoleKeyInfo HoldHere = Console.ReadKey();
+            }
         }
 
         /// <summary>
@@ -189,7 +226,6 @@ namespace FlatFreak
                     Message = "Error while reading input stream: " + nl + nl +
                             Ex.Message + nl + nl + Ex.StackTrace + nl;
                     Wl(Message);
-
                 }
                 finally
                 {
@@ -199,15 +235,10 @@ namespace FlatFreak
                     FreakOut();
                 }
             }
-            else
-            {
-                Wl("Filename not supplied." + nl);
-            }
         }
 
         /// <summary>
-        /// Outputs the frequency report to a file for CLI or a Rich text box
-        /// for GUI
+        /// Outputs the frequency report to a file or StdOut for CLI
         /// </summary>
         static private void FreakOut()
         {
@@ -307,8 +338,7 @@ namespace FlatFreak
         /// </summary>
         static private void HeadFreak()
         {
-            string Line;
-            Line = "FlatFreak version: " +
+            string Line = nl + "FlatFreak version: " +
                 System.Windows.Forms.Application.ProductVersion +
                 " on " + DateTime.Now.ToString() + nl +
                 "Input file: " + CliFilename + nl +
@@ -328,7 +358,7 @@ namespace FlatFreak
         /// <param name="Message">Text message to send to StdOut</param>
         static private void Wl(string Message)
         {
-            Console.WriteLine(Message + nl);
+            Console.WriteLine(Message);
         }
 
         static public string CliFilename1 { get => CliFilename; set => CliFilename = value; }

@@ -175,7 +175,7 @@ namespace FlatFreak
         }
 
         /// <summary>
-        /// Used to test the FreakList and FreakCell classes
+        /// Used to test the FreakList and FreakCell classes                                   
         /// </summary>
         private void TestClass()
         {
@@ -399,8 +399,7 @@ namespace FlatFreak
             CliColumn = Column.Value.ToString(); 
             CliLength = Length.Value.ToString(); 
             CliName = txtFieldname.Text; 
-            string Line;
-            Line = "FlatFreak version: " +
+            string Line = "FlatFreak version: " +
                 Application.ProductVersion +
                 " on " + DateTime.Now.ToString() + nl +
                 "Input file: " + CliFilename + nl +
