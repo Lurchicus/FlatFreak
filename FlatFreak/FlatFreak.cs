@@ -7,8 +7,10 @@ namespace FlatFreak
 {
     /// <summary>
     /// This program is used to create a "frequency" report on a flat file
-    /// column. This effectively aggregates the column as a percentage.
-    /// The program is unique(ish) as it works in CLI and GUI modes.
+    /// column of variable width. This effectively aggregates the column as 
+    /// a percentage.
+    /// The program is unique(ish) as it works in CLI and GUI modes (it did
+    /// so more cleanly in VB.NET, but whatever).
     /// </summary>
     public partial class FlatFreak : Form
     {
@@ -63,7 +65,7 @@ namespace FlatFreak
         /// </summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
-        private void btnFile_Click(object sender, EventArgs e)
+        private void BtnFile_Click(object sender, EventArgs e)
         {
             SInfo("Get input file...");
             txtFilename.Clear();
@@ -84,7 +86,7 @@ namespace FlatFreak
         /// </summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
-        private void tsbRun_Click(object sender, EventArgs e)
+        private void TsbRun_Click(object sender, EventArgs e)
         {
             SInfo("Running...");
             Reader(txtFilename.Text, Column.Value.ToString(), Length.Value.ToString());
@@ -96,7 +98,7 @@ namespace FlatFreak
         /// </summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
-        private void tsbPrintSetup_Click(object sender, EventArgs e)
+        private void TsbPrintSetup_Click(object sender, EventArgs e)
         {
             prdSetup.ShowDialog();
         }
@@ -106,7 +108,7 @@ namespace FlatFreak
         /// </summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
-        private void tsbPrintPreview_Click(object sender, EventArgs e)
+        private void TsbPrintPreview_Click(object sender, EventArgs e)
         {
             prdPreview.ShowDialog();
         }
@@ -116,7 +118,7 @@ namespace FlatFreak
         /// </summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
-        private void tsbPrint_Click(object sender, EventArgs e)
+        private void TsbPrint_Click(object sender, EventArgs e)
         {
             DialogResult ret = printDialog1.ShowDialog();
             if (ret == DialogResult.OK)
@@ -130,7 +132,7 @@ namespace FlatFreak
         /// </summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
-        private void tsbDone_Click(object sender, EventArgs e)
+        private void TsbDone_Click(object sender, EventArgs e)
         {
             if (Freaks != null)
             {
@@ -144,14 +146,14 @@ namespace FlatFreak
         /// </summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
-        private void prdDocument_BeginPrint(object sender, System.Drawing.Printing.PrintEventArgs e) => CheckPrint = 0;
+        private void PrdDocument_BeginPrint(object sender, System.Drawing.Printing.PrintEventArgs e) => CheckPrint = 0;
 
         /// <summary>
         /// Indicates printing the current page has started
         /// </summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
-        private void prdDocument_PrintPage(object sender, System.Drawing.Printing.PrintPageEventArgs e)
+        private void PrdDocument_PrintPage(object sender, System.Drawing.Printing.PrintPageEventArgs e)
         {
             CheckPrint = RText1.Print(CheckPrint, RText1.TextLength, e);
             if (CheckPrint < RText1.TextLength)
@@ -220,11 +222,11 @@ namespace FlatFreak
             }
 
             TxtApp(nl + "Test setup complete. Expect:" + nl +
-                "2 Jovians" + nl +
-                "1 Manticoran" + nl +
-                "3 Progenitors" + nl +
-                "1 Solarian" + nl +
-                "2 Vogons" + nl + nl +
+                "22.22% 2 Jovians" + nl +
+                "11.11% 1 Manticoran" + nl +
+                "33.33% 3 Progenitors" + nl +
+                "11.11% 1 Solarian" + nl +
+                "22.22% 2 Vogons" + nl + nl +
                 "Use test data as input to a report..." + nl + nl);
 
             CliColumn = "1";

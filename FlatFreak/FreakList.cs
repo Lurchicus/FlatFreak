@@ -4,14 +4,16 @@ using System.Collections.Generic;
 namespace FlatFreak
 {
     /// <summary>
-    ///
+    /// This is simply a list of FreakCells
     /// </summary>
     internal class FreakList
     {
         private Int32 MaxItemLength;
 
         /// <summary>
-        /// A list of FreakCell objects
+        /// A list of FreakCell objects. This object determines if a new 
+        /// FreakCell is added to the list or if we simply increment the
+        /// counter on an existing FreakCell.
         /// </summary>
         public static List<FreakCell> CellList = new List<FreakCell> { };
 
@@ -27,7 +29,7 @@ namespace FlatFreak
 
         /// <summary>
         /// Overload constructor creates a new instance of FreakList (a list
-        /// of FreakCell object) with one initial item in Item
+        /// of FreakCell object) with one initial FreakCell in Item
         /// </summary>
         /// <param name="Item">A unique string</param>
         public void New(string Item)

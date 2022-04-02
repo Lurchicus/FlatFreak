@@ -94,7 +94,7 @@
             this.tsbRun.Size = new System.Drawing.Size(23, 22);
             this.tsbRun.Text = "tsbRun";
             this.tsbRun.ToolTipText = "Run";
-            this.tsbRun.Click += new System.EventHandler(this.tsbRun_Click);
+            this.tsbRun.Click += new System.EventHandler(this.TsbRun_Click);
             // 
             // toolStripSeparator1
             // 
@@ -110,7 +110,7 @@
             this.tsbPrintSetup.Name = "tsbPrintSetup";
             this.tsbPrintSetup.Size = new System.Drawing.Size(23, 22);
             this.tsbPrintSetup.Text = "Print setup";
-            this.tsbPrintSetup.Click += new System.EventHandler(this.tsbPrintSetup_Click);
+            this.tsbPrintSetup.Click += new System.EventHandler(this.TsbPrintSetup_Click);
             // 
             // tsbPrintPreview
             // 
@@ -121,7 +121,7 @@
             this.tsbPrintPreview.Name = "tsbPrintPreview";
             this.tsbPrintPreview.Size = new System.Drawing.Size(23, 22);
             this.tsbPrintPreview.Text = "Print preview";
-            this.tsbPrintPreview.Click += new System.EventHandler(this.tsbPrintPreview_Click);
+            this.tsbPrintPreview.Click += new System.EventHandler(this.TsbPrintPreview_Click);
             // 
             // tsbPrint
             // 
@@ -132,7 +132,7 @@
             this.tsbPrint.Name = "tsbPrint";
             this.tsbPrint.Size = new System.Drawing.Size(23, 22);
             this.tsbPrint.Text = "Print";
-            this.tsbPrint.Click += new System.EventHandler(this.tsbPrint_Click);
+            this.tsbPrint.Click += new System.EventHandler(this.TsbPrint_Click);
             // 
             // toolStripSeparator2
             // 
@@ -147,7 +147,7 @@
             this.tsbDone.Name = "tsbDone";
             this.tsbDone.Size = new System.Drawing.Size(23, 22);
             this.tsbDone.Text = "Done";
-            this.tsbDone.Click += new System.EventHandler(this.tsbDone_Click);
+            this.tsbDone.Click += new System.EventHandler(this.TsbDone_Click);
             // 
             // Button1
             // 
@@ -201,8 +201,8 @@
             // 
             // prdDocument
             // 
-            this.prdDocument.BeginPrint += new System.Drawing.Printing.PrintEventHandler(this.prdDocument_BeginPrint);
-            this.prdDocument.PrintPage += new System.Drawing.Printing.PrintPageEventHandler(this.prdDocument_PrintPage);
+            this.prdDocument.BeginPrint += new System.Drawing.Printing.PrintEventHandler(this.PrdDocument_BeginPrint);
+            this.prdDocument.PrintPage += new System.Drawing.Printing.PrintPageEventHandler(this.PrdDocument_PrintPage);
             // 
             // prdPreview
             // 
@@ -242,7 +242,7 @@
             this.btnFile.Size = new System.Drawing.Size(28, 28);
             this.btnFile.TabIndex = 2;
             this.btnFile.UseVisualStyleBackColor = true;
-            this.btnFile.Click += new System.EventHandler(this.btnFile_Click);
+            this.btnFile.Click += new System.EventHandler(this.BtnFile_Click);
             // 
             // txtFilename
             // 
